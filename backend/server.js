@@ -11,28 +11,70 @@ let Todo = require('./todo.model')
 app.use(cors())
 app.use(bodyParser.json())
 
-mongoose.connect('mongodb://127.0.0.1:27017/mern_project', { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect('mongodb://127.0.0.1:27017/mern_project',
+  { useNewUrlParser: true, useUnifiedTopology: true })
 const connection = mongoose.connection
-connection.once('open', () => { console.log('DB SUCCESS') })
+connection.once('open', () => { console.log('DB connection success.') })
 
 todoRoutes.route('/').get((req, res) => {
   Todo.find((err, todos) => {
     if (err) {
       console.log(err)
-    } else {
+    }
+    else {
       res.json(todos)
     }
   })
 })
+
 todoRoutes.route('/:id').get((req, res) => {
   let id = req.params.id
-  Todo.findById((err, todo) => {
+
+  Todo.findById(id, (err, todo) => {
     if (err) {
-      console.log(err)
-    } else {
+      res.status(404).send(
+        { message: 'Todo non existent', meta: { message: err.message } },
+      )
+    }
+    else {
       res.json(todo)
     }
   })
+})
+
+todoRoutes.route('/add').post((req, res) => {
+  let todo = new Todo(req.body)
+
+  todo.save().then(todo => {
+    res.status(200).json({ message: 'Added a new Todo' })
+  }).catch(err => {
+    res.status(400).send(
+      { message: 'Cannot add new Todo', meta: { message: err.message } },
+    )
+  })
+})
+
+todoRoutes.route('/update/:id').post((req, res) => {
+  Todo.findById(req.params.id, (err, todo) => {
+    if (!todo) {
+      res.status(404).send('Todo non existent')
+    }
+    else {
+      todo.description = req.body.description
+      todo.priority = req.body.priority
+      todo.responsible = req.body.responsible
+      todo.completed = req.body.completed
+
+      todo.save().then(todo => {
+        res.status(200).json({ message: 'Updated Todo' })
+      }).catch(err => {
+        res.status(400).send(
+          { message: 'Cannot update Todo', meta: { message: err.message } },
+        )
+      })
+    }
+  })
+
 })
 
 app.use('/todos', todoRoutes)

@@ -1,4 +1,6 @@
 import React from 'react'
+import axios from 'axios'
+import Swal from 'sweetalert2'
 
 export default class CreateTodo extends React.Component {
   constructor (props) {
@@ -38,9 +40,17 @@ export default class CreateTodo extends React.Component {
   onSubmit (e) {
     e.preventDefault()
 
-    // Submit
-    console.table(this.state)
+    // Submit form
+    const newTodo = {}
+    Object.assign(newTodo, this.state)
 
+    axios.post('http://localhost:3001/todos/add', newTodo).then((response) => {
+      Swal.fire('Good job!', response.data.message, 'success')
+    }).catch((error) => {
+      console.error(error)
+    })
+
+    // Reset form
     this.setState({
       description: '',
       responsible: '',
