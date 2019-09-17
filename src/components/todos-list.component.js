@@ -1,14 +1,72 @@
 import React from 'react'
+import axios from 'axios'
 
 export default class TodosList extends React.Component {
+  constructor (props) {
+    super(props)
+    this.state = { todos: [] }
+  }
+
+  changeStatus (i) {
+    console.log(this.state.todos[i])
+  }
+
+  componentDidMount () {
+    axios.get('http://localhost:3001/todos').then((response) => {
+      this.setState({ todos: response.data })
+    }).catch((error) => {
+      console.error(error)
+    })
+  }
+
   render () {
+    const todoRows = this.state.todos.map(
+      (todo, i) => <Todo key={i} value={todo}
+                         onClick={() => this.changeStatus(i)}/>,
+    )
+
     return (
       <div className="card">
         <div className="card-header">
-          <h3 className="card-title">Hello From Todos List Component!</h3>
+          <h3 className="card-title">List TODOS!</h3>
         </div>
-        <div className="card-body"></div>
+        <div className="card-body">
+          <table className="table table-striped">
+            <thead>
+            <tr>
+              <th>Description</th>
+              <th>Responsible</th>
+              <th>Priority</th>
+              <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {todoRows}
+            </tbody>
+          </table>
+        </div>
       </div>
+    )
+  }
+}
+
+class Todo extends React.Component {
+  render () {
+    const priorities = ['Low', 'Medium', 'High']
+
+    return (
+      <tr>
+        <td>{this.props.value.description}</td>
+        <td>{this.props.value.responsible}</td>
+        <td>{priorities[parseInt(this.props.value.priority) - 1]}</td>
+        <td>
+          <input type="checkbox"
+                 className="form-check-input"
+                 checked={this.props.value.completed}
+                 onChange={this.props.onClick}
+          />
+        </td>
+      </tr>
     )
   }
 }
