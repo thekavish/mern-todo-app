@@ -8,7 +8,20 @@ export default class TodosList extends React.Component {
   }
 
   changeStatus (i) {
-    console.log(this.state.todos[i])
+    const currentTodo = this.state.todos[i]
+    currentTodo.completed = !currentTodo.completed
+
+    axios.post('http://localhost:3001/todos/update/' + currentTodo._id,
+      currentTodo).then((response) => {
+      console.log(response)
+      let newTodos = this.state.todos.slice()
+      newTodos[i] = currentTodo
+      this.setState({
+        todos: newTodos,
+      })
+    }).catch((error) => {
+      console.error(error)
+    })
   }
 
   componentDidMount () {
@@ -32,7 +45,7 @@ export default class TodosList extends React.Component {
         </div>
         <div className="card-body">
           <table className="table table-striped">
-            <thead>
+            <thead className={'thead-dark'}>
             <tr>
               <th>Description</th>
               <th>Responsible</th>
@@ -55,7 +68,9 @@ class Todo extends React.Component {
     const priorities = ['Low', 'Medium', 'High']
 
     return (
-      <tr>
+      <tr className={this.props.value.completed
+        ? 'table-danger'
+        : 'table-success'}>
         <td>{this.props.value.description}</td>
         <td>{this.props.value.responsible}</td>
         <td>{priorities[parseInt(this.props.value.priority) - 1]}</td>
