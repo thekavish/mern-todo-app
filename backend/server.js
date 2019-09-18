@@ -33,7 +33,7 @@ todoRoutes.route('/:id').get((req, res) => {
   Todo.findById(id, (err, todo) => {
     if (err) {
       res.status(404).send(
-        { message: 'Todo non existent', meta: { message: err.message } },
+        { message: 'Todo non existent', error: { message: err.message } },
       )
     }
     else {
@@ -49,7 +49,7 @@ todoRoutes.route('/add').post((req, res) => {
     res.status(200).json({ message: 'Added a new Todo' })
   }).catch(err => {
     res.status(400).send(
-      { message: 'Cannot add new Todo', meta: { message: err.message } },
+      { message: 'Cannot add new Todo', error: { message: err.message } },
     )
   })
 })
@@ -69,7 +69,7 @@ todoRoutes.route('/update/:id').post((req, res) => {
         res.status(200).json({ message: 'Updated Todo' })
       }).catch(err => {
         res.status(400).send(
-          { message: 'Cannot update Todo', meta: { message: err.message } },
+          { message: 'Cannot update Todo', error: { message: err.message } },
         )
       })
     }

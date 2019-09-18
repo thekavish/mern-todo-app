@@ -1,5 +1,6 @@
 import React from 'react'
 import axios from 'axios'
+import { Link } from 'react-router-dom'
 
 export default class TodosList extends React.Component {
   constructor (props) {
@@ -50,6 +51,7 @@ export default class TodosList extends React.Component {
               <th>Description</th>
               <th>Responsible</th>
               <th>Priority</th>
+              <th>Status</th>
               <th>Actions</th>
             </tr>
             </thead>
@@ -76,10 +78,13 @@ class Todo extends React.Component {
         <td>{priorities[parseInt(this.props.value.priority) - 1]}</td>
         <td>
           <input type="checkbox"
-                 className="form-check-input"
+                 className="form-control"
                  checked={this.props.value.completed}
                  onChange={this.props.onClick}
           />
+        </td>
+        <td>
+          <Link to={'edit/' + this.props.value._id} className="btn btn-primary btn-sm">Edit</Link>
         </td>
       </tr>
     )

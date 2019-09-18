@@ -45,7 +45,7 @@ export default class CreateTodo extends React.Component {
     Object.assign(newTodo, this.state)
 
     axios.post('http://localhost:3001/todos/add', newTodo).then((response) => {
-      Swal.fire('Good job!', response.data.message, 'success')
+      Swal.fire('Hurray!', response.data.message, 'success')
     }).catch((error) => {
       console.error(error)
     })
