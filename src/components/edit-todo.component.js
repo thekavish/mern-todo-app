@@ -21,7 +21,7 @@ export default class EditTodo extends React.Component {
 
   componentDidMount () {
     axios.get('http://localhost:3001/todos/' + this.props.match.params.id).then((response) => {
-      let storable={}
+      let storable = {}
       Object.assign(storable, response.data)
       delete storable.__v
       delete storable._id
@@ -57,8 +57,12 @@ export default class EditTodo extends React.Component {
     const newTodo = {}
     Object.assign(newTodo, this.state)
 
-    axios.post('http://localhost:3001/todos/update/' + this.props.match.params.id, newTodo).then((response) => {
+    axios.put(
+      'http://localhost:3001/todos/update/' + this.props.match.params.id,
+      newTodo).then((response) => {
       Swal.fire('Hurray!', response.data.message, 'success')
+
+      this.props.history.push('/')
     }).catch((error) => {
       console.error(error)
     })

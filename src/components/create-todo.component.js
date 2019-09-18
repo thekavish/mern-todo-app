@@ -46,16 +46,18 @@ export default class CreateTodo extends React.Component {
 
     axios.post('http://localhost:3001/todos/add', newTodo).then((response) => {
       Swal.fire('Hurray!', response.data.message, 'success')
+
+      // Reset form
+      this.setState({
+        description: '',
+        responsible: '',
+        priority: '1',
+        completed: false,
+      })
+
+      this.props.history.push('/')
     }).catch((error) => {
       console.error(error)
-    })
-
-    // Reset form
-    this.setState({
-      description: '',
-      responsible: '',
-      priority: '1',
-      completed: false,
     })
   }
 
@@ -89,8 +91,8 @@ export default class CreateTodo extends React.Component {
                   <label htmlFor="todo-responsible">Responsible</label>
                   <input type="text" className="form-control"
                          id="todo-responsible" placeholder="Who's Responsible"
-                         value={this.state.responsible}
-                         onChange={this.onChangeResponsible} required/>
+                         onChange={this.onChangeResponsible} required
+                         value={this.state.responsible}/>
                 </div>
               </div>
             </div>

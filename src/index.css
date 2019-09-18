@@ -12,10 +12,6 @@ code {
     monospace;
 }
 
-tr.table-danger {
+tr.text-strike td:nth-child(-n+3) {
     text-decoration: line-through;
-}
-
-input[type=checkbox].form-control {
-    font-size: 0.5rem;
 }

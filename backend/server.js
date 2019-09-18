@@ -11,13 +11,15 @@ let Todo = require('./todo.model')
 app.use(cors())
 app.use(bodyParser.json())
 
-mongoose.connect('mongodb://127.0.0.1:27017/mern_project',
-  { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(
+  'mongodb://127.0.0.1:27017/mern_project',
+  { useNewUrlParser: true, useUnifiedTopology: true },
+)
 const connection = mongoose.connection
 connection.once('open', () => { console.log('DB connection success.') })
 
 todoRoutes.route('/').get((req, res) => {
-  Todo.find((err, todos) => {
+  Todo.find(function (err, todos) {
     if (err) {
       console.log(err)
     }
@@ -54,7 +56,7 @@ todoRoutes.route('/add').post((req, res) => {
   })
 })
 
-todoRoutes.route('/update/:id').post((req, res) => {
+todoRoutes.route('/update/:id').put((req, res) => {
   Todo.findById(req.params.id, (err, todo) => {
     if (!todo) {
       res.status(404).send('Todo non existent')
@@ -75,6 +77,21 @@ todoRoutes.route('/update/:id').post((req, res) => {
     }
   })
 
+})
+
+todoRoutes.route('/delete/:id').delete((req, res) => {
+  let id = req.params.id
+
+  Todo.deleteOne({ '_id': id }, (err, todo) => {
+    if (err) {
+      res.status(404).send(
+        { message: 'Todo non existent', error: { message: err.message } },
+      )
+    }
+    else {
+      res.json(todo)
+    }
+  })
 })
 
 app.use('/todos', todoRoutes)
