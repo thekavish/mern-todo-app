@@ -78,14 +78,14 @@ export default class TodosList extends React.Component {
         <div className="card-header">
           <h3 className="card-title">List TODOS!</h3>
         </div>
-        <div className="card-body">
+        <div className="card-body well" style={{ 'overflow': 'auto' }}>
           <table className="table table-striped">
             <thead className={'thead-dark'}>
             <tr>
               <th>Description</th>
               <th>Responsible</th>
               <th>Priority</th>
-              <th>Status</th>
+              <th>Completed</th>
               <th>Actions</th>
             </tr>
             </thead>
@@ -109,11 +109,13 @@ class Todo extends React.Component {
         <td>{this.props.value.responsible}</td>
         <td>{priorities[parseInt(this.props.value.priority) - 1]}</td>
         <td>
-          <div className="form-check">
+          <div className="custom-control custom-switch">
             <input type="checkbox"
-                   className="form-check-input"
+                   className="custom-control-input"
+                   id={'status-' + this.props.value._id}
                    checked={this.props.value.completed}
                    onChange={this.props.onStatusChange}/>
+            <label className="custom-control-label" htmlFor={'status-' + this.props.value._id}>&nbsp;</label>
           </div>
         </td>
         <td>
